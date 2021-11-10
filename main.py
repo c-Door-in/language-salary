@@ -1,22 +1,16 @@
-import logging
-from environs import Env
 from collections import defaultdict
 
+from environs import Env
 from terminaltables import DoubleTable
 
 from parce_vacancies import parse_hh_vacancies, parce_sj_vacancies
 
 
-logging.basicConfig(
-    format='%(asctime)s - %(levelname)s - %(funcName)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-
-
-def fetch_language_vacancies(source_site, secret_key):
-    vacancies = {}
-    languages = [
+env = Env()
+env.read_env()
+LANGUAGES = env(
+    'LANGUAGES',
+    [
         'JavaScript',
         'Java',
         'Python',
@@ -27,7 +21,12 @@ def fetch_language_vacancies(source_site, secret_key):
         'Go',
         'TypeScript',
     ]
-    for language in languages:
+)
+
+
+def fetch_language_vacancies(source_site, secret_key):
+    vacancies = {}
+    for language in LANGUAGES:
         if source_site == 'hh':
             vacancies[language] = parse_hh_vacancies(language)
         elif source_site == 'sj':
@@ -94,15 +93,6 @@ def get_vacancies_statistic(source, secret_key=None):
     return vacancies_statistic
 
 
-def fetch_superjob_vacancies_name(secret_key):
-    for vacancy in parce_sj_vacancies(secret_key)['objects']:
-        print('{}, {}, {}'.format(
-                vacancy['profession'],
-                vacancy['town']['title'],
-                predict_rub_salary_sj(vacancy),
-            ))
-
-
 def print_terminaltable(statistic):
     table_data = [
         [
@@ -127,9 +117,6 @@ def print_terminaltable(statistic):
 
 
 def main():
-    env = Env()
-    env.read_env()
-
     sj_secret_key = env('SUPERJOB_SECRET_KEY')
 
     vacancies_statistic_hh = get_vacancies_statistic('hh')
