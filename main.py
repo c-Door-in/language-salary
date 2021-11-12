@@ -58,15 +58,18 @@ def predict_rub_salary_sj(vacancy):
     return None
 
 
+def get_predict_rub_salary(vacancy, source_site):
+    if source_site == 'hh':
+        return predict_rub_salary_hh(vacancy)
+    elif source_site == 'sj':
+        return predict_rub_salary_sj(vacancy)
+    return None
+
+
 def fetch_all_rub_salary(vacancies, source_site):
     all_salaries = []
-
     for vacancy in vacancies:
-        if source_site == 'hh':
-            vacancy_salary = predict_rub_salary_hh(vacancy)
-        elif source_site == 'sj':
-            vacancy_salary = predict_rub_salary_sj(vacancy)
-
+        vacancy_salary = get_predict_rub_salary(vacancy, source_site)
         if vacancy_salary:
             all_salaries.append(vacancy_salary)
     return all_salaries
