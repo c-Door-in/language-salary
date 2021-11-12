@@ -35,7 +35,7 @@ def parse_hh_vacancies(language, secret_key):
             'Page %s of %s was added successfully', page, language,
         )
 
-    return vacancies
+    return vacancies, response.json()['found']
 
 
 def parce_sj_vacancies(language, secret_key):
@@ -62,4 +62,4 @@ def parce_sj_vacancies(language, secret_key):
         if not response.json()['more']:
             break
 
-    return vacancies
+    return vacancies, response.json()['total']

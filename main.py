@@ -6,28 +6,6 @@ from terminaltables import DoubleTable
 from parce_vacancies import parse_hh_vacancies, parce_sj_vacancies
 
 
-def fetch_language_vacancies(parce_source, secret_key):
-    vacancies = {}
-    languages = env.list(
-        'LANGUAGES',
-        [
-            'JavaScript',
-            'Java',
-            'Python',
-            'Ruby',
-            'PHP',
-            'C++',
-            'C#',
-            'Go',
-            'TypeScript',
-        ]
-    )
-    for language in languages:
-        vacancies[language] = parce_source(language, secret_key)
-
-    return vacancies
-
-
 def predict_common_salary(salary_from, salary_to):
     if salary_from or salary_to:
         if not salary_from:
@@ -67,14 +45,28 @@ def fetch_all_rub_salary(vacancies, predict_rub_salary):
 
 def get_vacancies_statistic(parce_source, predict_rub_salary, secret_key=None):
     vacancies_statistic = defaultdict(str)
-    for language, vacancies in fetch_language_vacancies(parce_source,
-                                                        secret_key).items():
+    languages = env.list(
+        'LANGUAGES',
+        [
+            'JavaScript',
+            'Java',
+            'Python',
+            'Ruby',
+            'PHP',
+            'C++',
+            'C#',
+            'Go',
+            'TypeScript',
+        ]
+    )
+    for language in languages:
+        vacancies, found = parce_source(language, secret_key)
         all_salaries = fetch_all_rub_salary(vacancies, predict_rub_salary)
         if not all_salaries:
             continue
         average_salary = int(sum(all_salaries) / len(all_salaries))
         vacancies_statistic[language] = {
-            'vacancies_found': len(vacancies),
+            'vacancies_found': found,
             'vacancies_processed': len(all_salaries),
             'average_salary': average_salary
         }
