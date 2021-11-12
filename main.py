@@ -91,7 +91,6 @@ def print_terminaltable(statistic, title):
         ]
         table_data.append(table_line)
 
-    title = 'SuperJob Moscow'
     table = DoubleTable(table_data, title)
     print(table.table)
 
