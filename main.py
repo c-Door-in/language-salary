@@ -6,6 +6,14 @@ from terminaltables import DoubleTable
 from parce_vacancies import parse_hh_vacancies, parce_sj_vacancies
 
 
+def parce_vacancies(source_site, language, secret_key):
+    if source_site == 'hh':
+        return parse_hh_vacancies(language)
+    elif source_site == 'sj':
+        return parce_sj_vacancies(language, secret_key)
+    return None
+
+
 def fetch_language_vacancies(source_site, secret_key):
     vacancies = {}
     languages = env.list(
@@ -23,10 +31,8 @@ def fetch_language_vacancies(source_site, secret_key):
         ]
     )
     for language in languages:
-        if source_site == 'hh':
-            vacancies[language] = parse_hh_vacancies(language)
-        elif source_site == 'sj':
-            vacancies[language] = parce_sj_vacancies(language, secret_key)
+        vacancies[language] = parce_vacancies(source_site, language, secret_key)
+
     return vacancies
 
 
