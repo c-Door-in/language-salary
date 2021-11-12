@@ -73,7 +73,7 @@ def get_vacancies_statistic(parce_source, predict_rub_salary, secret_key=None):
     return vacancies_statistic
 
 
-def print_terminaltable(statistic, title):
+def draw_terminaltable(statistic, title):
     table_data = [
         [
             'Язык программирования',
@@ -92,7 +92,7 @@ def print_terminaltable(statistic, title):
         table_data.append(table_line)
 
     table = DoubleTable(table_data, title)
-    print(table.table)
+    return table.table
 
 
 def main():
@@ -108,8 +108,8 @@ def main():
         sj_secret_key
     )
 
-    print_terminaltable(vacancies_statistic_hh, 'HeadHunter Moscow')
-    print_terminaltable(vacancies_statistic_sj, 'SuperJob Moscow')
+    print(draw_terminaltable(vacancies_statistic_hh, 'HeadHunter Moscow'))
+    print(draw_terminaltable(vacancies_statistic_sj, 'SuperJob Moscow'))
 
 
 if __name__ == '__main__':
