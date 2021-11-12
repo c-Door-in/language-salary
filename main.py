@@ -36,8 +36,7 @@ def predict_common_salary(salary_from, salary_to):
             return salary_to * 0.8
         elif not salary_to:
             return salary_from * 1.2
-        else:
-            return (salary_from + salary_to) / 2
+        return (salary_from + salary_to) / 2
     return None
 
 
@@ -47,8 +46,7 @@ def predict_rub_salary_hh(vacancy):
             vacancy['salary']['from'],
             vacancy['salary']['to'],
         )
-    else:
-        return None
+    return None
 
 
 def predict_rub_salary_sj(vacancy):
@@ -57,8 +55,7 @@ def predict_rub_salary_sj(vacancy):
             vacancy['payment_from'],
             vacancy['payment_to'],
         )
-    else:
-        return None
+    return None
 
 
 def fetch_all_rub_salary(vacancies, source_site):
