@@ -8,7 +8,7 @@ from parce_vacancies import parse_hh_vacancies, parce_sj_vacancies
 
 env = Env()
 env.read_env()
-LANGUAGES = env(
+LANGUAGES = env.list(
     'LANGUAGES',
     [
         'JavaScript',
