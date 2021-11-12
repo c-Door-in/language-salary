@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-def parse_hh_vacancies(language):
+def parse_hh_vacancies(language, secret_key):
     url = 'https://api.hh.ru/vacancies'
     vacancies = []
     for page in count(0):

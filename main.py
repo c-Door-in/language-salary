@@ -6,15 +6,7 @@ from terminaltables import DoubleTable
 from parce_vacancies import parse_hh_vacancies, parce_sj_vacancies
 
 
-def parce_vacancies(source_site, language, secret_key):
-    if source_site == 'hh':
-        return parse_hh_vacancies(language)
-    elif source_site == 'sj':
-        return parce_sj_vacancies(language, secret_key)
-    return None
-
-
-def fetch_language_vacancies(source_site, secret_key):
+def fetch_language_vacancies(parce_source, secret_key):
     vacancies = {}
     languages = env.list(
         'LANGUAGES',
@@ -31,7 +23,7 @@ def fetch_language_vacancies(source_site, secret_key):
         ]
     )
     for language in languages:
-        vacancies[language] = parce_vacancies(source_site, language, secret_key)
+        vacancies[language] = parce_source(language, secret_key)
 
     return vacancies
 
@@ -64,28 +56,20 @@ def predict_rub_salary_sj(vacancy):
     return None
 
 
-def get_predict_rub_salary(vacancy, source_site):
-    if source_site == 'hh':
-        return predict_rub_salary_hh(vacancy)
-    elif source_site == 'sj':
-        return predict_rub_salary_sj(vacancy)
-    return None
-
-
-def fetch_all_rub_salary(vacancies, source_site):
+def fetch_all_rub_salary(vacancies, predict_rub_salary):
     all_salaries = []
     for vacancy in vacancies:
-        vacancy_salary = get_predict_rub_salary(vacancy, source_site)
+        vacancy_salary = predict_rub_salary(vacancy)
         if vacancy_salary:
             all_salaries.append(vacancy_salary)
     return all_salaries
 
 
-def get_vacancies_statistic(source, secret_key=None):
+def get_vacancies_statistic(parce_source, predict_rub_salary, secret_key=None):
     vacancies_statistic = defaultdict(str)
-    for language, vacancies in fetch_language_vacancies(source,
+    for language, vacancies in fetch_language_vacancies(parce_source,
                                                         secret_key).items():
-        all_salaries = fetch_all_rub_salary(vacancies, source)
+        all_salaries = fetch_all_rub_salary(vacancies, predict_rub_salary)
         if not all_salaries:
             continue
         average_salary = int(sum(all_salaries) / len(all_salaries))
@@ -123,8 +107,15 @@ def print_terminaltable(statistic, title):
 def main():
     sj_secret_key = env('SUPERJOB_SECRET_KEY')
 
-    vacancies_statistic_hh = get_vacancies_statistic('hh')
-    vacancies_statistic_sj = get_vacancies_statistic('sj', sj_secret_key)
+    vacancies_statistic_hh = get_vacancies_statistic(
+        parse_hh_vacancies,
+        predict_rub_salary_hh,
+    )
+    vacancies_statistic_sj = get_vacancies_statistic(
+        parce_sj_vacancies,
+        predict_rub_salary_sj,
+        sj_secret_key
+    )
 
     print_terminaltable(vacancies_statistic_hh, 'HeadHunter Moscow')
     print_terminaltable(vacancies_statistic_sj, 'SuperJob Moscow')
