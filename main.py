@@ -6,27 +6,23 @@ from terminaltables import DoubleTable
 from parce_vacancies import parse_hh_vacancies, parce_sj_vacancies
 
 
-env = Env()
-env.read_env()
-LANGUAGES = env.list(
-    'LANGUAGES',
-    [
-        'JavaScript',
-        'Java',
-        'Python',
-        'Ruby',
-        'PHP',
-        'C++',
-        'C#',
-        'Go',
-        'TypeScript',
-    ]
-)
-
-
 def fetch_language_vacancies(source_site, secret_key):
     vacancies = {}
-    for language in LANGUAGES:
+    languages = env.list(
+        'LANGUAGES',
+        [
+            'JavaScript',
+            'Java',
+            'Python',
+            'Ruby',
+            'PHP',
+            'C++',
+            'C#',
+            'Go',
+            'TypeScript',
+        ]
+    )
+    for language in languages:
         if source_site == 'hh':
             vacancies[language] = parse_hh_vacancies(language)
         elif source_site == 'sj':
@@ -127,4 +123,6 @@ def main():
 
 
 if __name__ == '__main__':
+    env = Env()
+    env.read_env()
     main()
