@@ -17,7 +17,7 @@ def predict_common_salary(salary_from, salary_to):
 
 
 def predict_rub_salary_hh(vacancy):
-    if vacancy['salary']['currency'] == 'RUR':
+    if vacancy['salary']['currency'] != 'RUR':
         return None
     return predict_common_salary(
         vacancy['salary']['from'],
@@ -26,7 +26,7 @@ def predict_rub_salary_hh(vacancy):
 
 
 def predict_rub_salary_sj(vacancy):
-    if not vacancy['currency'] == 'rub':
+    if not vacancy['currency'] != 'rub':
         return None
     return predict_common_salary(
         vacancy['payment_from'],
