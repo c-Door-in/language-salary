@@ -7,31 +7,31 @@ from parce_vacancies import parse_hh_vacancies, parce_sj_vacancies
 
 
 def predict_common_salary(salary_from, salary_to):
-    if salary_from or salary_to:
-        if not salary_from:
-            return salary_to * 0.8
-        elif not salary_to:
-            return salary_from * 1.2
-        return (salary_from + salary_to) / 2
-    return None
+    if not (salary_from and salary_to):
+        return None
+    if not salary_from:
+        return salary_to * 0.8
+    elif not salary_to:
+        return salary_from * 1.2
+    return (salary_from + salary_to) / 2
 
 
 def predict_rub_salary_hh(vacancy):
     if vacancy['salary']['currency'] == 'RUR':
-        return predict_common_salary(
-            vacancy['salary']['from'],
-            vacancy['salary']['to'],
-        )
-    return None
+        return None
+    return predict_common_salary(
+        vacancy['salary']['from'],
+        vacancy['salary']['to'],
+    )
 
 
 def predict_rub_salary_sj(vacancy):
-    if vacancy['currency'] == 'rub':
-        return predict_common_salary(
-            vacancy['payment_from'],
-            vacancy['payment_to'],
-        )
-    return None
+    if not vacancy['currency'] == 'rub':
+        return None
+    return predict_common_salary(
+        vacancy['payment_from'],
+        vacancy['payment_to'],
+    )
 
 
 def fetch_all_rub_salary(vacancies, predict_rub_salary):
