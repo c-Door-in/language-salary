@@ -31,12 +31,14 @@ def fetch_language_vacancies(source_site, secret_key):
 
 
 def predict_common_salary(salary_from, salary_to):
-    if not salary_from:
-        return salary_to * 0.8
-    elif not salary_to:
-        return salary_from * 1.2
-    else:
-        return (salary_from + salary_to) / 2
+    if salary_from or salary_to:
+        if not salary_from:
+            return salary_to * 0.8
+        elif not salary_to:
+            return salary_from * 1.2
+        else:
+            return (salary_from + salary_to) / 2
+    return None
 
 
 def predict_rub_salary_hh(vacancy):
