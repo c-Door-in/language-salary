@@ -93,7 +93,7 @@ def get_vacancies_statistic(source, secret_key=None):
     return vacancies_statistic
 
 
-def print_terminaltable(statistic):
+def print_terminaltable(statistic, title):
     table_data = [
         [
             'Язык программирования',
@@ -111,9 +111,9 @@ def print_terminaltable(statistic):
         ]
         table_data.append(table_line)
 
-    sj_title = 'SuperJob Moscow'
-    sj_table = DoubleTable(table_data, sj_title)
-    print(sj_table.table)
+    title = 'SuperJob Moscow'
+    table = DoubleTable(table_data, title)
+    print(table.table)
 
 
 def main():
@@ -122,8 +122,8 @@ def main():
     vacancies_statistic_hh = get_vacancies_statistic('hh')
     vacancies_statistic_sj = get_vacancies_statistic('sj', sj_secret_key)
 
-    print_terminaltable(vacancies_statistic_hh)
-    print_terminaltable(vacancies_statistic_sj)
+    print_terminaltable(vacancies_statistic_hh, 'HeadHunter Moscow')
+    print_terminaltable(vacancies_statistic_sj, 'SuperJob Moscow')
 
 
 if __name__ == '__main__':
