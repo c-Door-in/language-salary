@@ -20,17 +20,7 @@ SUPERJOB_SECRET_KEY=your_secret_key
 По умолчанию, в приложении использован набор популярных языков программирования на основании рейтинга `GitHub`.
 Вы можете передать свой список языков, добавив их в виде простого списка в файл `.env`:
 ```
-LANGUAGES=[
-    JavaScript,
-    Java,
-    Python,
-    Ruby,
-    PHP,
-    C++,
-    C#,
-    Go,
-    TypeScript,
-]
+LANGUAGES="JavaScript","Java","Python","Ruby","PHP","C++","C#","Go","TypeScript"
 ```
 Запустите приложение командой:
 ```
