@@ -47,22 +47,8 @@ def fetch_all_rub_salary(vacancies, predict_rub_salary):
     return all_salaries
 
 
-def get_vacancies_statistic(parce_source, predict_rub_salary, secret_key=None):
+def get_vacancies_statistic(parce_source, predict_rub_salary, languages, secret_key=None):
     vacancies_statistic = defaultdict(str)
-    languages = env.list(
-        'LANGUAGES',
-        [
-            'JavaScript',
-            'Java',
-            'Python',
-            'Ruby',
-            'PHP',
-            'C++',
-            'C#',
-            'Go',
-            'TypeScript',
-        ]
-    )
     for language in languages:
         vacancies, found = parce_source(language, secret_key)
         all_salaries = fetch_all_rub_salary(vacancies, predict_rub_salary)
@@ -105,17 +91,36 @@ def main():
         format='%(asctime)s - %(levelname)s - %(funcName)s - %(message)s'
     )
     logger.setLevel(logging.INFO)
-    
+
+    env = Env()
+    env.read_env()
     sj_secret_key = env('SUPERJOB_SECRET_KEY')
+    languages = env.list(
+        'LANGUAGES',
+        [
+            'JavaScript',
+            'Java',
+            'Python',
+            'Ruby',
+            'PHP',
+            'C++',
+            'C#',
+            'Go',
+            'TypeScript',
+        ],
+    )
 
     vacancies_statistic_hh = get_vacancies_statistic(
         parse_hh_vacancies,
         predict_rub_salary_hh,
+        languages,
+        
     )
     vacancies_statistic_sj = get_vacancies_statistic(
         parce_sj_vacancies,
         predict_rub_salary_sj,
-        sj_secret_key
+        languages,
+        sj_secret_key,
     )
 
     print(draw_terminaltable(vacancies_statistic_hh, 'HeadHunter Moscow'))
@@ -123,6 +128,4 @@ def main():
 
 
 if __name__ == '__main__':
-    env = Env()
-    env.read_env()
     main()
