@@ -23,15 +23,17 @@ def parse_hh_vacancies(language, secret_key):
         response = requests.get(url, params=params)
         response.raise_for_status()
 
-        if page >= response.json()['pages']:
+        response_json = response.json()
+
+        if page >= response_json['pages']:
             break
 
-        vacancies.extend(response.json()['items'])
+        vacancies.extend(response_json['items'])
         logger.info(
             'Page %s of %s was added successfully', page, language,
         )
 
-    return vacancies, response.json()['found']
+    return vacancies, response_json['found']
 
 
 def parse_sj_vacancies(language, secret_key):
@@ -51,11 +53,13 @@ def parse_sj_vacancies(language, secret_key):
         response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
 
-        vacancies.extend(response.json()['objects'])
+        response_json = response.json()
+
+        vacancies.extend(response_json['objects'])
         logger.info(
             'Page %s of %s was added successfully', page, language,
         )
-        if not response.json()['more']:
+        if not response_json['more']:
             break
 
-    return vacancies, response.json()['total']
+    return vacancies, response_json['total']
