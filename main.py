@@ -1,9 +1,13 @@
+import logging
 from collections import defaultdict
 
 from environs import Env
 from terminaltables import DoubleTable
 
 from parce_vacancies import parse_hh_vacancies, parce_sj_vacancies
+
+
+logger = logging.getLogger('logger_main')
 
 
 def predict_common_salary(salary_from, salary_to):
@@ -96,6 +100,12 @@ def draw_terminaltable(statistic, title):
 
 
 def main():
+    logging.basicConfig(
+        level=logging.ERROR,
+        format='%(asctime)s - %(levelname)s - %(funcName)s - %(message)s'
+    )
+    logger.setLevel(logging.INFO)
+    
     sj_secret_key = env('SUPERJOB_SECRET_KEY')
 
     vacancies_statistic_hh = get_vacancies_statistic(

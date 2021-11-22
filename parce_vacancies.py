@@ -4,11 +4,7 @@ from itertools import count
 import requests
 
 
-logging.basicConfig(
-    format='%(asctime)s - %(levelname)s - %(funcName)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger = logging.getLogger('logger_main')
 
 
 def parse_hh_vacancies(language, secret_key):
