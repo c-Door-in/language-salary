@@ -34,7 +34,7 @@ def parse_hh_vacancies(language, secret_key):
     return vacancies, response.json()['found']
 
 
-def parce_sj_vacancies(language, secret_key):
+def parse_sj_vacancies(language, secret_key):
     url = 'https://api.superjob.ru/2.0/vacancies'
     vacancies = []
     headers = {

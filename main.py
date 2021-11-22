@@ -4,7 +4,7 @@ from collections import defaultdict
 from environs import Env
 from terminaltables import DoubleTable
 
-from parce_vacancies import parse_hh_vacancies, parce_sj_vacancies
+from parse_vacancies import parse_hh_vacancies, parse_sj_vacancies
 
 
 logger = logging.getLogger('logger_main')
@@ -47,10 +47,10 @@ def fetch_all_rub_salary(vacancies, predict_rub_salary):
     return all_salaries
 
 
-def get_vacancies_statistic(parce_source, predict_rub_salary, languages, secret_key=None):
+def get_vacancies_statistic(parse_source, predict_rub_salary, languages, secret_key=None):
     vacancies_statistic = defaultdict(str)
     for language in languages:
-        vacancies, found = parce_source(language, secret_key)
+        vacancies, found = parse_source(language, secret_key)
         all_salaries = fetch_all_rub_salary(vacancies, predict_rub_salary)
         if not all_salaries:
             continue
@@ -117,7 +117,7 @@ def main():
         
     )
     vacancies_statistic_sj = get_vacancies_statistic(
-        parce_sj_vacancies,
+        parse_sj_vacancies,
         predict_rub_salary_sj,
         languages,
         sj_secret_key,
