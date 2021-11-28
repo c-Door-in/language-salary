@@ -48,7 +48,7 @@ def fetch_all_rub_salary(vacancies, predict_rub_salary):
 
 
 def get_vacancies_statistic(parse_source, predict_rub_salary, languages, api_parameters, secret_key=None):
-    vacancies_statistic = defaultdict(str)
+    vacancies_statistic = {}
     for language in languages:
         vacancies, found = parse_source(api_parameters, language, secret_key)
         all_salaries = fetch_all_rub_salary(vacancies, predict_rub_salary)
