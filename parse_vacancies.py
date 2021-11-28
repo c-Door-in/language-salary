@@ -7,16 +7,16 @@ import requests
 logger = logging.getLogger('logger_main')
 
 
-def parse_hh_vacancies(language, secret_key):
+def parse_hh_vacancies(api_parameters, language, secret_key):
     url = 'https://api.hh.ru/vacancies'
     vacancies = []
     for page in count(0):
         params = {
-                'professional_roles': '96',
+                'professional_roles': api_parameters['programmer_role'],
                 'text': language.lower(),
-                'parent_area': '113',
-                'area': '1',
-                'period': '30',
+                'parent_area': api_parameters['moscow_parent_area'],
+                'area': api_parameters['moscow_area'],
+                'period': api_parameters['number_of_days'],
                 'page': page,
                 'only_with_salary': 'true',
             }
@@ -36,7 +36,7 @@ def parse_hh_vacancies(language, secret_key):
     return vacancies, hh_vacancies_summary['found']
 
 
-def parse_sj_vacancies(language, secret_key):
+def parse_sj_vacancies(api_parameters, language, secret_key):
     url = 'https://api.superjob.ru/2.0/vacancies'
     vacancies = []
     headers = {
@@ -44,8 +44,8 @@ def parse_sj_vacancies(language, secret_key):
     }
     for page in count(0):
         params = {
-            'catalogues': '48',
-            'town': 'Москва',
+            'catalogues': api_parameters['programmer_number'],
+            'town': api_parameters['moscow_area'],
             'no_agreement': '1',
             'page': page,
             'keyword': language.lower(),

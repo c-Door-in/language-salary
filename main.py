@@ -47,10 +47,10 @@ def fetch_all_rub_salary(vacancies, predict_rub_salary):
     return all_salaries
 
 
-def get_vacancies_statistic(parse_source, predict_rub_salary, languages, secret_key=None):
+def get_vacancies_statistic(parse_source, predict_rub_salary, languages, api_parameters, secret_key=None):
     vacancies_statistic = defaultdict(str)
     for language in languages:
-        vacancies, found = parse_source(language, secret_key)
+        vacancies, found = parse_source(api_parameters, language, secret_key)
         all_salaries = fetch_all_rub_salary(vacancies, predict_rub_salary)
         if not all_salaries:
             continue
@@ -94,8 +94,7 @@ def main():
 
     env = Env()
     env.read_env()
-    sj_secret_key = env('SUPERJOB_SECRET_KEY')
-    languages = env.list(
+    LANGUAGES = env.list(
         'LANGUAGES',
         [
             'JavaScript',
@@ -110,17 +109,38 @@ def main():
         ],
     )
 
+    HH_API_PARAMETERS = env.dict(
+        'HH_API_PARAMETERS',
+        {
+            'programmer_role': '96',
+            'moscow_parent_area': '113',
+            'moscow_area': '1',
+            'number_of_days': '30',
+        },
+        subcast_values=str,
+    )
     vacancies_statistic_hh = get_vacancies_statistic(
         parse_hh_vacancies,
         predict_rub_salary_hh,
-        languages,
-        
+        languages=LANGUAGES,
+        api_parameters=HH_API_PARAMETERS,
+    )
+
+    SUPERJOB_SECRET_KEY = env('SUPERJOB_SECRET_KEY')
+    SJ_API_PARAMETERS = env.dict(
+        'SJ_API_PARAMETERS',
+        {
+            'programmer_number': '48',
+            'moscow_area': 'Москва',
+        },
+        subcast_values=str,
     )
     vacancies_statistic_sj = get_vacancies_statistic(
         parse_sj_vacancies,
         predict_rub_salary_sj,
-        languages,
-        sj_secret_key,
+        languages=LANGUAGES,
+        secret_key=SUPERJOB_SECRET_KEY,
+        api_parameters=SJ_API_PARAMETERS,
     )
 
     print(draw_terminaltable(vacancies_statistic_hh, 'HeadHunter Moscow'))
