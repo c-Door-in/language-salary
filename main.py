@@ -94,7 +94,7 @@ def main():
 
     env = Env()
     env.read_env()
-    LANGUAGES = env.list(
+    languages = env.list(
         'LANGUAGES',
         [
             'JavaScript',
@@ -109,7 +109,7 @@ def main():
         ],
     )
 
-    HH_API_PARAMETERS = env.dict(
+    hh_api_parameters = env.dict(
         'HH_API_PARAMETERS',
         {
             'programmer_role': '96',
@@ -122,12 +122,12 @@ def main():
     vacancies_statistic_hh = get_vacancies_statistic(
         parse_hh_vacancies,
         predict_rub_salary_hh,
-        languages=LANGUAGES,
-        api_parameters=HH_API_PARAMETERS,
+        languages,
+        api_parameters=hh_api_parameters,
     )
 
-    SUPERJOB_SECRET_KEY = env('SUPERJOB_SECRET_KEY')
-    SJ_API_PARAMETERS = env.dict(
+    superjob_secret_key = env('SUPERJOB_SECRET_KEY')
+    sj_api_parameters = env.dict(
         'SJ_API_PARAMETERS',
         {
             'programmer_number': '48',
@@ -138,9 +138,9 @@ def main():
     vacancies_statistic_sj = get_vacancies_statistic(
         parse_sj_vacancies,
         predict_rub_salary_sj,
-        languages=LANGUAGES,
-        secret_key=SUPERJOB_SECRET_KEY,
-        api_parameters=SJ_API_PARAMETERS,
+        languages,
+        secret_key=superjob_secret_key,
+        api_parameters=sj_api_parameters,
     )
 
     print(draw_terminaltable(vacancies_statistic_hh, 'HeadHunter Moscow'))
