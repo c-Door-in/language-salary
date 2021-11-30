@@ -4,7 +4,7 @@ from collections import defaultdict
 from environs import Env
 from terminaltables import DoubleTable
 
-from parse_vacancies import parse_hh_vacancies, parse_sj_vacancies
+from parse_vacancies import parse_vacancies_hh, parse_sj_vacancies
 
 
 logger = logging.getLogger('logger_main')
@@ -47,19 +47,45 @@ def fetch_all_rub_salary(vacancies, predict_rub_salary):
     return all_salaries
 
 
-def get_vacancies_statistic(parse_source, predict_rub_salary, languages, api_parameters, secret_key=None):
+def get_language_stat(all_salaries, found):
+    average_salary = int(sum(all_salaries) / len(all_salaries))
+    return {
+        'vacancies_found': found,
+        'vacancies_processed': len(all_salaries),
+        'average_salary': average_salary
+    }
+
+
+def get_vacancies_statistic_hh(env, languages):
     vacancies_statistic = {}
     for language in languages:
-        vacancies, found = parse_source(api_parameters, language, secret_key)
-        all_salaries = fetch_all_rub_salary(vacancies, predict_rub_salary)
+        vacancies, found = parse_vacancies_hh(
+            language,
+            professional_roles=env('HH_PROFESSIONAL_ROLE', '96'),
+            parent_area=env('HH_PARENT_AREA', '113'),
+            area=env('HH_AREA', '1'),
+            period=env('HH_SEARCHING_PERIOD', '30'),
+        )
+        all_salaries = fetch_all_rub_salary(vacancies, predict_rub_salary_hh)
         if not all_salaries:
             continue
-        average_salary = int(sum(all_salaries) / len(all_salaries))
-        vacancies_statistic[language] = {
-            'vacancies_found': found,
-            'vacancies_processed': len(all_salaries),
-            'average_salary': average_salary
-        }
+        vacancies_statistic[language] = get_language_stat(all_salaries,found)
+    return vacancies_statistic
+
+
+def get_vacancies_statistic_sj(env, languages):
+    vacancies_statistic = {}
+    for language in languages:
+        vacancies, found = parse_sj_vacancies(
+            language,
+            catalogues=env('SJ_CATALOGUES_CODE', '48'),
+            town=env('SJ_TOWN', '113'),
+            superjob_secret_key = env('SUPERJOB_SECRET_KEY'),
+        )
+        all_salaries = fetch_all_rub_salary(vacancies, predict_rub_salary_sj)
+        if not all_salaries:
+            continue
+        vacancies_statistic[language] = get_language_stat(all_salaries,found)
     return vacancies_statistic
 
 
@@ -109,39 +135,8 @@ def main():
         ],
     )
 
-    hh_api_parameters = env.dict(
-        'HH_API_PARAMETERS',
-        {
-            'programmer_role': '96',
-            'moscow_parent_area': '113',
-            'moscow_area': '1',
-            'number_of_days': '30',
-        },
-        subcast_values=str,
-    )
-    vacancies_statistic_hh = get_vacancies_statistic(
-        parse_hh_vacancies,
-        predict_rub_salary_hh,
-        languages,
-        api_parameters=hh_api_parameters,
-    )
-
-    superjob_secret_key = env('SUPERJOB_SECRET_KEY')
-    sj_api_parameters = env.dict(
-        'SJ_API_PARAMETERS',
-        {
-            'programmer_number': '48',
-            'moscow_area': 'Москва',
-        },
-        subcast_values=str,
-    )
-    vacancies_statistic_sj = get_vacancies_statistic(
-        parse_sj_vacancies,
-        predict_rub_salary_sj,
-        languages,
-        secret_key=superjob_secret_key,
-        api_parameters=sj_api_parameters,
-    )
+    vacancies_statistic_hh = get_vacancies_statistic_hh(env, languages)
+    vacancies_statistic_sj = get_vacancies_statistic_sj(env, languages)
 
     print(draw_terminaltable(vacancies_statistic_hh, 'HeadHunter Moscow'))
     print(draw_terminaltable(vacancies_statistic_sj, 'SuperJob Moscow'))
