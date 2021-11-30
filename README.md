@@ -22,11 +22,24 @@ SUPERJOB_SECRET_KEY=your_secret_key
 ```
 LANGUAGES=JavaScript,Java,Python,Ruby,PHP,C++,C#,Go,TypeScript
 ```
-В программе установлены параметры API на текущий момент. В случае изменения данных на сервисах API, вы можете их поменять, добавив в `.env` строки:
+В программе установлены параметры API на текущий момент. В случае изменения данных на сервисах API, вы можете их поменять, добавив в `.env` следующие строки.
+
+Для [hh.ru](https://hh.ru/):
 ```
-HH_API_PARAMETERS = "programmer_role=96,moscow_parent_area=113,moscow_area=1,number_of_days=30"
-SJ_API_PARAMETERS = "programmer_number=48,moscow_area=Москва"
+HH_PROFESSIONAL_ROLE=96
+HH_PARENT_AREA=113
+HH_AREA=1
+HH_SEARCHING_PERIOD=30
 ```
+*Вы можете найти актуальные значения в [справочнике api.hh.ru](https://github.com/hhru/api/blob/master/docs/vacancies.md#search).*
+
+Для [superjob.ru](https://hh.ru/):
+```
+SJ_CATALOGUES_CODE=48
+SJ_TOWN=Москва
+```
+*Вы можете найти актуальные значения в [справочнике api.superjob.ru](https://api.superjob.ru/).*
+
 Подставьте обновленные параметры в соответствующие значения.
 ## Как запустить
 Запустите приложение командой:
