@@ -1,5 +1,4 @@
 import logging
-from collections import defaultdict
 
 from environs import Env
 from terminaltables import DoubleTable
