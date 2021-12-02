@@ -20,12 +20,13 @@ def predict_common_salary(salary_from, salary_to):
 
 
 def predict_rub_salary_hh(vacancy):
-    if vacancy['salary']['currency'] != 'RUR':
-        return None
-    return predict_common_salary(
-        vacancy['salary']['from'],
-        vacancy['salary']['to'],
-    )
+    if vacancy['salary']:
+        if vacancy['salary']['currency'] == 'RUR':
+            return predict_common_salary(
+                vacancy['salary']['from'],
+                vacancy['salary']['to'],
+            )
+    return None
 
 
 def predict_rub_salary_sj(vacancy):
@@ -68,7 +69,7 @@ def get_vacancies_statistic_hh(env, languages):
         all_salaries = fetch_all_rub_salary(vacancies, predict_rub_salary_hh)
         if not all_salaries:
             continue
-        vacancies_statistic[language] = get_language_stat(all_salaries,found)
+        vacancies_statistic[language] = get_language_stat(all_salaries, found)
     return vacancies_statistic
 
 
@@ -84,7 +85,7 @@ def get_vacancies_statistic_sj(env, languages):
         all_salaries = fetch_all_rub_salary(vacancies, predict_rub_salary_sj)
         if not all_salaries:
             continue
-        vacancies_statistic[language] = get_language_stat(all_salaries,found)
+        vacancies_statistic[language] = get_language_stat(all_salaries, found)
     return vacancies_statistic
 
 

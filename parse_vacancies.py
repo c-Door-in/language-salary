@@ -16,7 +16,6 @@ def parse_vacancies_hh(language, professional_roles, parent_area, area, period):
         'parent_area': parent_area,
         'area': area,
         'period': period,
-        'only_with_salary': 'true',
     }
     for page in count(0):
         params['page'] = page
@@ -41,7 +40,6 @@ def parse_sj_vacancies(language, catalogues, town, superjob_secret_key):
     params = {
         'catalogues': catalogues,
         'town': town,
-        'no_agreement': '1',
         'keyword': language.lower(),
     }
     for page in count(0):
