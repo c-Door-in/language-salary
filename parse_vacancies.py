@@ -8,18 +8,18 @@ logger = logging.getLogger('logger_main')
 
 
 def parse_vacancies_hh(language, professional_roles, parent_area, area, period):
-    url = 'https://api.hh.ru/vacancies'
     vacancies = []
+    url = 'https://api.hh.ru/vacancies'
+    params = {
+        'professional_roles': professional_roles,
+        'text': language.lower(),
+        'parent_area': parent_area,
+        'area': area,
+        'period': period,
+        'only_with_salary': 'true',
+    }
     for page in count(0):
-        params = {
-                'professional_roles': professional_roles,
-                'text': language.lower(),
-                'parent_area': parent_area,
-                'area': area,
-                'period': period,
-                'page': page,
-                'only_with_salary': 'true',
-            }
+        params['page'] = page
         response = requests.get(url, params=params)
         response.raise_for_status()
 
@@ -37,19 +37,17 @@ def parse_vacancies_hh(language, professional_roles, parent_area, area, period):
 
 
 def parse_sj_vacancies(language, catalogues, town, superjob_secret_key):
-    url = 'https://api.superjob.ru/2.0/vacancies'
     vacancies = []
-    headers = {
-        'X-Api-App-Id': superjob_secret_key,
+    url = 'https://api.superjob.ru/2.0/vacancies'
+    headers = {'X-Api-App-Id': superjob_secret_key}
+    params = {
+        'catalogues': catalogues,
+        'town': town,
+        'no_agreement': '1',
+        'keyword': language.lower(),
     }
     for page in count(0):
-        params = {
-            'catalogues': catalogues,
-            'town': town,
-            'no_agreement': '1',
-            'page': page,
-            'keyword': language.lower(),
-        }
+        params['page'] = page
         response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
 
