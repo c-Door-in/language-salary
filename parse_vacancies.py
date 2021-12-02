@@ -22,15 +22,15 @@ def parse_vacancies_hh(language, professional_roles, parent_area, area, period):
         response = requests.get(url, params=params)
         response.raise_for_status()
 
-        hh_vacancies_summary = response.json()
-        vacancies.extend(hh_vacancies_summary['items'])
+        vacancies_summary = response.json()
+        vacancies.extend(vacancies_summary['items'])
         logger.info(
             'Page %s of %s was added successfully', page, language,
         )
-        if page == hh_vacancies_summary['pages'] - 1:
+        if page == vacancies_summary['pages'] - 1:
             break
 
-    return vacancies, hh_vacancies_summary['found']
+    return vacancies, vacancies_summary['found']
 
 
 def parse_sj_vacancies(language, catalogues, town, superjob_secret_key):
@@ -47,13 +47,13 @@ def parse_sj_vacancies(language, catalogues, town, superjob_secret_key):
         response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
 
-        sj_vacancies_summary = response.json()
+        vacancies_summary = response.json()
 
-        vacancies.extend(sj_vacancies_summary['objects'])
+        vacancies.extend(vacancies_summary['objects'])
         logger.info(
             'Page %s of %s was added successfully', page, language,
         )
-        if not sj_vacancies_summary['more']:
+        if not vacancies_summary['more']:
             break
 
-    return vacancies, sj_vacancies_summary['total']
+    return vacancies, vacancies_summary['total']
