@@ -101,7 +101,7 @@ def get_vacancies_statistic_sj(
 
 
 def draw_terminaltable(statistic, title):
-    table_data = [
+    table_content = [
         [
             'Язык программирования',
             'Вакансий найдено',
@@ -116,9 +116,9 @@ def draw_terminaltable(statistic, title):
             statistic['vacancies_processed'],
             statistic['average_salary'],
         ]
-        table_data.append(table_line)
+        table_content.append(table_line)
 
-    table = DoubleTable(table_data, title)
+    table = DoubleTable(table_content, title)
     return table.table
 
 
