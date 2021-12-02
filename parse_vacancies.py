@@ -24,14 +24,12 @@ def parse_vacancies_hh(language, professional_roles, parent_area, area, period):
         response.raise_for_status()
 
         hh_vacancies_summary = response.json()
-
-        if page >= hh_vacancies_summary['pages']:
-            break
-
         vacancies.extend(hh_vacancies_summary['items'])
         logger.info(
             'Page %s of %s was added successfully', page, language,
         )
+        if page == hh_vacancies_summary['pages'] - 1:
+            break
 
     return vacancies, hh_vacancies_summary['found']
 
